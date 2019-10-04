@@ -18,8 +18,6 @@ NPM_ADD_PACKAGE(
         msvs
     VERSION
         2019
-    ARCHITECTURE
-        amd64
     BUILD_NUMBER
         0
     TAG
@@ -31,8 +29,6 @@ NPM_ADD_PACKAGE(
         WindowsSDK
     VERSION
         10.0.18362.0
-    ARCHITECTURE
-        amd64
     BUILD_NUMBER
         0
 )
