@@ -21,9 +21,9 @@ NPM_ADD_PACKAGE(
     ARCHITECTURE
         amd64
     BUILD_NUMBER
-        1
+        0
     TAG
-        "exp1"
+        ""
 )
 
 NPM_ADD_PACKAGE(

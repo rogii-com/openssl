@@ -50,10 +50,10 @@ else()
     endif()
 endif()
 
-# 'b' has index 1
+# 'd' has index 3
 set(
     PACKAGE_NAME
-    "openssl-1.1.1.1-${ARCH}-${BUILD}${TAG}"
+    "openssl-1.1.1.3-${ARCH}-${BUILD}${TAG}"
 )
 
 set(
