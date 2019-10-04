@@ -9,3 +9,9 @@
 [submodule "krb5"]
 	path = krb5
 	url = https://github.com/krb5/krb5
+[submodule "cmake/cnpm"]
+	path = cmake/cnpm
+	url = https://github.com/rogii-com/cnpm.git
+[submodule "cmake/utils"]
+	path = cmake/utils
+	url = https://github.com/rogii-com/cmake-utils.git
