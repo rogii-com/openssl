@@ -67,9 +67,16 @@ file(
 )
 
 if(UNIX)
+    set(
+        CONFIG_ARCH
+        linux-x86_64
+    )
+endif()
+
+if(UNIX)
     execute_process(
         COMMAND
-            perl Configure shared no-asm ${CONFIG_ARCH} --prefix=${ROOT}/${PACKAGE_NAME} --openssldir=${ROOT}/${PACKAGE_NAME}/ssl
+            perl ./Configure shared no-asm ${CONFIG_ARCH} --prefix=${ROOT}/${PACKAGE_NAME} --openssldir=${ROOT}/${PACKAGE_NAME}/ssl
         WORKING_DIRECTORY
             "${CMAKE_CURRENT_SOURCE_DIR}"
     )
@@ -108,24 +115,24 @@ if(UNIX)
     foreach(file ${files})
         execute_process(
             COMMAND
-                bash ${CMAKE_CURRENT_SOURCE_DIR}/cmake/split_debug_info.sh "${file}"
+                bash ${CMAKE_CURRENT_SOURCE_DIR}/cmake/utils/split_debug_info.sh "${file}"
             WORKING_DIRECTORY
                 "${ROOT}/${PACKAGE_NAME}/lib/"
         )
     endforeach()
         execute_process(
         COMMAND
-            bash -c "chmod u+w ${ROOT}/${PACKAGE_NAME}/lib/engines/lib*"
+            bash -c "chmod u+w ${ROOT}/${PACKAGE_NAME}/lib/engines-1.1/*.so*"
         WORKING_DIRECTORY
             "${CMAKE_CURRENT_SOURCE_DIR}"
     )
-    file(GLOB files "${ROOT}/${PACKAGE_NAME}/lib/engines/*.so*")
+    file(GLOB files "${ROOT}/${PACKAGE_NAME}/lib/engines-1.1/*.so*")
     foreach(file ${files})
         execute_process(
             COMMAND
-                bash ${CMAKE_CURRENT_SOURCE_DIR}/cmake/split_debug_info.sh "${file}"
+                bash ${CMAKE_CURRENT_SOURCE_DIR}/cmake/utils/split_debug_info.sh "${file}"
             WORKING_DIRECTORY
-                "${ROOT}/${PACKAGE_NAME}/lib/engines"
+                "${ROOT}/${PACKAGE_NAME}/lib/engines-1.1"
         )
     endforeach()
     execute_process(
@@ -136,10 +143,16 @@ if(UNIX)
     )
     execute_process(
         COMMAND
-            bash -c "chmod -wx ${ROOT}/${PACKAGE_NAME}/lib/engines/lib*"
+            bash -c "chmod -wx ${ROOT}/${PACKAGE_NAME}/lib/engines-1.1/*.so*"
         WORKING_DIRECTORY
             "${CMAKE_CURRENT_SOURCE_DIR}"
     )
+	file(
+	    COPY
+		cmake/package.cmake
+	    DESTINATION
+		"${ROOT}/${PACKAGE_NAME}"
+	)
 elseif(WIN32)
     execute_process(
         COMMAND
@@ -160,6 +173,6 @@ execute_process(
     COMMAND
         ${CMAKE_COMMAND} -E tar cf ${ROOT}/${PACKAGE_NAME}.7z --format=7zip -- ${PACKAGE_NAME}
     WORKING_DIRECTORY
-        ${CMAKE_CURRENT_LIST_DIR}/..
+        ${ROOT}/${PACKAGE_NAME}/..
 )
 
