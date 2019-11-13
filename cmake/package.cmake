@@ -16,11 +16,22 @@ if(NOT TARGET OpenSSL::crypto)
         IMPORTED
     )
     if(MSVC)
+		if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+			set(
+				OPENSSL_SUFFIX
+				"-x64"
+			)
+		else()
+			set(
+				OPENSSL_SUFFIX
+				""
+			)
+		endif()
         set_target_properties(
             OpenSSL::crypto
             PROPERTIES
                 IMPORTED_LOCATION
-                    ${CMAKE_CURRENT_LIST_DIR}/bin/libcrypto-1_1.dll
+                    ${CMAKE_CURRENT_LIST_DIR}/bin/libcrypto-1_1${OPENSSL_SUFFIX}.dll
                 IMPORTED_IMPLIB
                     ${CMAKE_CURRENT_LIST_DIR}/lib/libcrypto.lib
                 INTERFACE_INCLUDE_DIRECTORIES
@@ -45,11 +56,22 @@ if(NOT TARGET OpenSSL::ssl)
         IMPORTED
     )
     if(MSVC)
+		if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+			set(
+				OPENSSL_SUFFIX
+				"-x64"
+			)
+		else()
+			set(
+				OPENSSL_SUFFIX
+				""
+			)
+		endif()
         set_target_properties(
             OpenSSL::ssl
             PROPERTIES
                 IMPORTED_LOCATION
-                    ${CMAKE_CURRENT_LIST_DIR}/bin/libssl-1_1.dll
+                    ${CMAKE_CURRENT_LIST_DIR}/bin/libssl-1_1${OPENSSL_SUFFIX}.dll
                 IMPORTED_IMPLIB
                     ${CMAKE_CURRENT_LIST_DIR}/lib/libssl.lib
                 INTERFACE_INCLUDE_DIRECTORIES
