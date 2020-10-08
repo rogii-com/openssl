@@ -1,11 +1,11 @@
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     set(
         OPENSSL_CRYPTO_LIBRARY_NAME
-        "libcrypto.so.1.0.2.15"
+        "libcrypto.so.1.1"
     )
     set(
         OPENSSL_SSL_LIBRARY_NAME
-        "libssl.so.1.0.2.15"
+        "libssl.so.1.1"
     )
 endif()
 
