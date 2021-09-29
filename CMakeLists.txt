@@ -10,28 +10,10 @@ project(
 )
 
 include(
-    ${PROJECT_SOURCE_DIR}/cmake/cnpm/NastyPackageManager.cmake
+    ${PROJECT_SOURCE_DIR}/rogii/npm/Include.cmake
 )
 
-NPM_ADD_PACKAGE(
-    NAME
-        msvs
-    VERSION
-        2019.14.27.29110
-    BUILD_NUMBER
-        1
-)
-
-NPM_ADD_PACKAGE(
-    NAME
-        WindowsSDK
-    VERSION
-        10.0.18362.0
-    BUILD_NUMBER
-        4
-)
-
-NPM_PREPARE_PACKAGES(
+CNPM_PREPARE_PACKAGES(
     DEFAULT_REPOSITORY_URLS
     "$ENV{CNPM_URLS}"
 )
@@ -95,7 +77,7 @@ add_custom_target(
         ${CMAKE_COMMAND}
         -E
         copy
-        ${PROJECT_SOURCE_DIR}/cmake/package.cmake
+        ${PROJECT_SOURCE_DIR}/rogii/package.cmake
         ${CMAKE_INSTALL_PREFIX}
     COMMENT
         "Build OpenSSL."

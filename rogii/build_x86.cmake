@@ -22,5 +22,5 @@ set(
 )
 
 include(
-    ${CMAKE_CURRENT_LIST_DIR}/build_common.cmake
+    "${CMAKE_CURRENT_LIST_DIR}/build_common.cmake"
 )

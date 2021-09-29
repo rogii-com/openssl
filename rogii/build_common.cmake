@@ -50,20 +50,43 @@ else()
     endif()
 endif()
 
-# 'h' has index 7
+include(
+    "${CMAKE_CURRENT_LIST_DIR}/version.cmake"
+)
+
+set(
+    BUILD_PATH
+    "${CMAKE_CURRENT_LIST_DIR}/../build"
+)
+
 set(
     PACKAGE_NAME
-    "openssl-1.1.1.7-${ARCH}-${BUILD}${TAG}"
+    "openssl-${ROGII_PKG_VERSION}-${ARCH}-${BUILD}${TAG}"
+)
+
+set(
+    CMAKE_INSTALL_PREFIX
+    ${ROOT}/${PACKAGE_NAME}
 )
 
 set(
     DEBUG_PATH
-    ${CMAKE_CURRENT_LIST_DIR}/../build/debug_${ARCH}
+    "${BUILD_PATH}/debug"
+)
+
+set(
+    RELEASE_PATH
+    "${BUILD_PATH}/release"
 )
 
 file(
     MAKE_DIRECTORY
-    ${DEBUG_PATH}
+    "${DEBUG_PATH}"
+)
+
+file(
+    MAKE_DIRECTORY
+    "${RELEASE_PATH}"
 )
 
 if(UNIX)
@@ -115,7 +138,7 @@ if(UNIX)
     foreach(file ${files})
         execute_process(
             COMMAND
-                bash ${CMAKE_CURRENT_SOURCE_DIR}/cmake/utils/split_debug_info.sh "${file}"
+                bash ${CMAKE_CURRENT_SOURCE_DIR}/rogii/utils/split_debug_info.sh "${file}"
             WORKING_DIRECTORY
                 "${ROOT}/${PACKAGE_NAME}/lib/"
         )
@@ -130,7 +153,7 @@ if(UNIX)
     foreach(file ${files})
         execute_process(
             COMMAND
-                bash ${CMAKE_CURRENT_SOURCE_DIR}/cmake/utils/split_debug_info.sh "${file}"
+                bash ${CMAKE_CURRENT_SOURCE_DIR}/rogii/utils/split_debug_info.sh "${file}"
             WORKING_DIRECTORY
                 "${ROOT}/${PACKAGE_NAME}/lib/engines-1.1"
         )
@@ -147,12 +170,6 @@ if(UNIX)
         WORKING_DIRECTORY
             "${CMAKE_CURRENT_SOURCE_DIR}"
     )
-	file(
-	    COPY
-		cmake/package.cmake
-	    DESTINATION
-		"${ROOT}/${PACKAGE_NAME}"
-	)
 elseif(WIN32)
     execute_process(
         COMMAND
@@ -169,10 +186,22 @@ elseif(WIN32)
     )
 endif()
 
+file(
+    COPY
+        "${CMAKE_CURRENT_LIST_DIR}/package.cmake"
+    DESTINATION
+        "${ROOT}/${PACKAGE_NAME}"
+)
+
+file(
+    REMOVE_RECURSE
+    "${BUILD_PATH}"
+)
+
 execute_process(
     COMMAND
-        ${CMAKE_COMMAND} -E tar cf "${PACKAGE_NAME}.7z" --format=7zip -- "${PACKAGE_NAME}"
+        "${CMAKE_COMMAND}" -E tar cf "${PACKAGE_NAME}.7z" --format=7zip -- "${PACKAGE_NAME}"
     WORKING_DIRECTORY
-        ${ROOT}
+        "${ROOT}"
 )
 
