@@ -21,16 +21,39 @@ CNPM_PREPARE_PACKAGES(
     "$ENV{CNPM_URLS}"
 )
 
-set(
-    OPENSSL_CONFIG_ARCH
-    "VC-WIN32"
-)
-
-if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+if(WIN32)
     set(
-        OPENSSL_CONFIG_ARCH
-        "VC-WIN64A"
+        PLATFORM_MAKE_PROGRAM
+        "nmake"
     )
+
+    if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+        set(
+            OPENSSL_CONFIG_ARCH
+            "VC-WIN64A"
+        )
+    else()
+        set(
+            OPENSSL_CONFIG_ARCH
+            "VC-WIN32"
+        )
+    endif()
+elseif(UNIX)
+    set(
+        PLATFORM_MAKE_PROGRAM
+        "make"
+    )
+
+    if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+        set(
+            OPENSSL_CONFIG_ARCH
+            "linux-x86_64"
+        )
+    else()
+        message(FATAL_ERROR "Unsupported arch")
+    endif()
+else()
+    message(FATAL_ERROR "Unsupported platform")
 endif()
 
 add_custom_command(
@@ -69,13 +92,7 @@ add_custom_command(
 add_custom_target(
     build_target
     COMMAND
-        ${CMAKE_COMMAND}
-        -E
-        env
-        LIBS=apps\\libapps.lib
-        ${CMAKE_MAKE_PROGRAM}
-        /E
-        install_sw
+        ${PLATFORM_MAKE_PROGRAM} install_sw
     COMMENT
         "Build OpenSSL."
     DEPENDS
@@ -83,4 +100,3 @@ add_custom_target(
     WORKING_DIRECTORY
         ${PROJECT_BINARY_DIR}/build
 )
-
