@@ -9,43 +9,51 @@ project(
         C
 )
 
-include(
-    ${PROJECT_SOURCE_DIR}/cmake/cnpm/NastyPackageManager.cmake
+set(
+    ROGII_FOLDER_PATH
+    "${CMAKE_CURRENT_LIST_DIR}/rogii"
 )
+include(${ROGII_FOLDER_PATH}/npm/Include.cmake)
+include(${ROGII_FOLDER_PATH}/environment.cmake)
 
-NPM_ADD_PACKAGE(
-    NAME
-        msvs
-    VERSION
-        2019.14.27.29110
-    BUILD_NUMBER
-        1
-)
-
-NPM_ADD_PACKAGE(
-    NAME
-        WindowsSDK
-    VERSION
-        10.0.18362.0
-    BUILD_NUMBER
-        4
-)
-
-NPM_PREPARE_PACKAGES(
+CNPM_PREPARE_PACKAGES(
     DEFAULT_REPOSITORY_URLS
     "$ENV{CNPM_URLS}"
 )
 
-set(
-    OPENSSL_CONFIG_ARCH
-    "VC-WIN32"
-)
-
-if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+if(WIN32)
     set(
-        OPENSSL_CONFIG_ARCH
-        "VC-WIN64A"
+        PLATFORM_MAKE_PROGRAM
+        "nmake"
     )
+
+    if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+        set(
+            OPENSSL_CONFIG_ARCH
+            "VC-WIN64A"
+        )
+    else()
+        set(
+            OPENSSL_CONFIG_ARCH
+            "VC-WIN32"
+        )
+    endif()
+elseif(UNIX)
+    set(
+        PLATFORM_MAKE_PROGRAM
+        "make"
+    )
+
+    if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+        set(
+            OPENSSL_CONFIG_ARCH
+            "linux-x86_64"
+        )
+    else()
+        message(FATAL_ERROR "Unsupported arch")
+    endif()
+else()
+    message(FATAL_ERROR "Unsupported platform")
 endif()
 
 add_custom_command(
@@ -84,19 +92,7 @@ add_custom_command(
 add_custom_target(
     build_target
     COMMAND
-        ${CMAKE_COMMAND}
-        -E
-        env
-        LIBS=apps\\libapps.lib
-        ${CMAKE_MAKE_PROGRAM}
-        /E
-        install_sw
-    COMMAND
-        ${CMAKE_COMMAND}
-        -E
-        copy
-        ${PROJECT_SOURCE_DIR}/cmake/package.cmake
-        ${CMAKE_INSTALL_PREFIX}
+        ${PLATFORM_MAKE_PROGRAM} install_sw
     COMMENT
         "Build OpenSSL."
     DEPENDS
@@ -104,4 +100,3 @@ add_custom_target(
     WORKING_DIRECTORY
         ${PROJECT_BINARY_DIR}/build
 )
-

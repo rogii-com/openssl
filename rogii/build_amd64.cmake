@@ -6,7 +6,7 @@ message(
 if(NOT DEFINED ENV{ENV_INSTALL})
     message(
         FATAL_ERROR
-        "You have to specify an install path via `ENV{ENV_INSTALL}' variable."
+        "You have to specify an install path via `ENV_INSTALL' variable."
     )
 endif()
 
@@ -22,5 +22,5 @@ set(
 )
 
 include(
-    ${CMAKE_CURRENT_LIST_DIR}/build_common.cmake
+    "${CMAKE_CURRENT_LIST_DIR}/build_common.cmake"
 )
