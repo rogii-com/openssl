@@ -8,6 +8,6 @@ CNPM_ADD_PACKAGE(
     VERSION
         ${MSVS_SDK_VERSION}
     BUILD_NUMBER
-        4
+        0
 )
 
